@@ -259,14 +259,21 @@ function setupUserEventListener() {
     // Delete
     document.addEventListener('keydown', function (event) {
         if (graph.isEnabled() && !graph.isSelectionEmpty()) {
-            if (event.key === "Delete") {
+            if (event.key === "Delete" || event.key === "Backspace") {
+                const cells = graph.getSelectionCells();
+
                 graph.getModel().beginUpdate();
                 try {
-                    let cells = graph.getSelectionCells();
                     graph.removeCells(cells);
                 }
                 finally {
                     graph.getModel().endUpdate();
+                }
+
+                for (let i = 0; i < cells.length; ++i) {
+                    if (isComposite(cells[i].getAttribute("type", ""))) {
+                        delete compositeChildrenNodes[cells[i].id];
+                    }
                 }
             }
         }
@@ -410,12 +417,11 @@ function groupSelectionCells() {
     const cells = graph.getSelectionCells()
 
     if (cells.length > 0) {
-        const groupCenter = getCenterPointOfCells(cells);
         graph.getModel().beginUpdate();
         try {
             graph.removeCells(cells);
 
-            const cell = addNewVertex("composite", groupCenter["cx"], groupCenter["cy"]);
+            const cell = addNewVertex("composite");
             graph.updateCellSize(cell, true);
 
             compositeChildrenNodes[cell.id] = cells;

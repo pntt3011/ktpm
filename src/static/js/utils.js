@@ -94,29 +94,6 @@ function cellsToString(cells) {
 };
 
 
-function getCenterPointOfCells(cells) {
-    let cx = 0;
-    let cy = 0;
-
-    for (let i = 0; i < cells.length; ++i) {
-        const center = getCenterPointOfCell(cells[i]);
-        cx += center["cx"];
-        cy += center["cy"];
-    }
-
-    return { "cx": cx / cells.length, "cy": cy / cells.length };
-}
-
-
-function getCenterPointOfCell(cell) {
-    const x = cell.geometry.x;
-    const y = cell.geometry.y;
-    const w = cell.geometry.width;
-    const h = cell.geometry.height;
-    return { "cx": x + w / 2, "cy": y + h / 2 };
-}
-
-
 function getCellAttribute(cell, attr, nodesMetadata) {
     const value = cell.getAttribute(attr, "")
     const valueType = nodesMetadata[cell.getAttribute("type", "")]["params"][attr]["type"];
