@@ -1,5 +1,5 @@
 let graph = undefined;
-let compositeChildrenNodes = {};
+let compositeChildrenCells = {};
 
 // Nodes' label, params and default values
 let nodesMetadata = {};
@@ -250,6 +250,8 @@ function setupUserEventListener() {
         }
     });
 
+    // Paste
+    // TODO: handle paste composite
     document.addEventListener('paste', function (event) {
         if (graph.isEnabled()) {
             pasteCells();
@@ -271,8 +273,8 @@ function setupUserEventListener() {
                 }
 
                 for (let i = 0; i < cells.length; ++i) {
-                    if (isComposite(cells[i].getAttribute("type", ""))) {
-                        delete compositeChildrenNodes[cells[i].id];
+                    if (cells[i].vertex && isComposite(cells[i].getAttribute("type", ""))) {
+                        delete compositeChildrenCells[cells[i].id];
                     }
                 }
             }
@@ -304,11 +306,10 @@ function setupUserEventListener() {
         container.replaceChildren();
 
         const cells = graph.getSelectionCells();
-        if (cells.length == 1) {
+        if (cells.length == 1 && cells[0].vertex) {
             showCellParams(container, cells[0]);
         }
     });
-
 }
 
 
@@ -415,27 +416,29 @@ function showCellParams(container, cell) {
 
 function groupSelectionCells() {
     const cells = graph.getSelectionCells()
+    let cell = null;
 
     if (cells.length > 0) {
         graph.getModel().beginUpdate();
         try {
             graph.removeCells(cells);
 
-            const cell = addNewVertex("composite");
+            cell = addNewVertex("composite");
             graph.updateCellSize(cell, true);
 
-            compositeChildrenNodes[cell.id] = cells;
+            compositeChildrenCells[cell.id] = cells;
             cell.setAttribute("children", cells.map(x => x.id));
         }
         finally {
             graph.getModel().endUpdate();
         }
     }
+    return cell;
 }
 
 
 function exportGraph(filename) {
-    const nodes = graphToNodes(graph, compositeChildrenNodes, nodesMetadata);
+    const nodes = graphToNodes(graph, compositeChildrenCells, nodesMetadata);
 
     fetch("/export", {
         method: 'POST',
@@ -460,4 +463,58 @@ function exportGraph(filename) {
             document.body.removeChild(element);
         }
     })
+}
+
+
+function simulateResnet() {
+    const parent = graph.getDefaultParent();
+
+    graph.getModel().beginUpdate();
+    try {
+        const input = addNewVertex("input");
+
+        // Composite
+        const _input = addNewVertex("input");
+        const _conv1 = addNewVertex("conv2d");
+        const _bn1 = addNewVertex("batchnorm2d");
+        const _relu1 = addNewVertex("relu");
+        const _conv2 = addNewVertex("conv2d");
+        const _bn2 = addNewVertex("batchnorm2d");
+        const _plus = addNewVertex("elewise_plus");
+        const _output = addNewVertex("output");
+
+        const _e0 = graph.insertEdge(parent, null, '', _input, _conv1);
+        const _e1 = graph.insertEdge(parent, null, '', _conv1, _bn1);
+        const _e2 = graph.insertEdge(parent, null, '', _bn1, _relu1);
+        const _e3 = graph.insertEdge(parent, null, '', _relu1, _conv2);
+        const _e4 = graph.insertEdge(parent, null, '', _conv2, _bn2);
+        const _e5 = graph.insertEdge(parent, null, '', _bn2, _plus);
+        const _e6 = graph.insertEdge(parent, null, '', _input, _plus);
+        const _e7 = graph.insertEdge(parent, null, '', _plus, _output);
+
+        graph.addSelectionCells(
+            [
+                _input, _conv1, _bn1, _relu1, _conv2, _bn2, _plus, _output,
+                _e0, _e1, _e2, _e3, _e4, _e5, _e6, _e7
+            ]
+        )
+
+        // Main resnet
+        const composite = groupSelectionCells();
+        const avgPooling = addNewVertex("avgpool2d");
+        const flatten = addNewVertex("flatten");
+        const fc = addNewVertex("fc");
+        const sigmoid = addNewVertex("sigmoid");
+        const output = addNewVertex("output");
+
+        const e0 = graph.insertEdge(parent, null, '', input, composite);
+        const e1 = graph.insertEdge(parent, null, '', composite, avgPooling);
+        const e2 = graph.insertEdge(parent, null, '', avgPooling, flatten);
+        const e3 = graph.insertEdge(parent, null, '', flatten, fc);
+        const e4 = graph.insertEdge(parent, null, '', fc, sigmoid);
+        const e5 = graph.insertEdge(parent, null, '', sigmoid, output);
+    }
+    finally {
+        graph.getModel().endUpdate();
+    }
 }

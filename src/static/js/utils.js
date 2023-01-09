@@ -122,10 +122,10 @@ function getCellAttribute(cell, attr, nodesMetadata) {
 // TODO: Huy
 /**
  * @param {mxGraph} graph 
- * @param {Array.<Map<String, Array.<mxCell>>>} compositeChildrenNodes: { "compositeId" : [ mxCell1, mxCell2, .. ] }
+ * @param {Array.<Map<String, Array.<mxCell>>>} compositeChildrenCells: { "compositeId" : [ mxCell1, mxCell2, .. ] }
  * @param {Map<String, Map<String, Object>>} nodesMetadata: { "nodeType": { "name": string, "params": {..}, "shape": string, "short_name": string } } 
  * @returns {List.<Map<String, Object>>} List of nodes
  */
-function graphToNodes(graph, compositeChildrenNodes, nodesMetadata) {
+function graphToNodes(graph, compositeChildrenCells, nodesMetadata) {
     return ["hello", "world"];
 }
