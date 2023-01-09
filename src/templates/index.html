@@ -1,0 +1,31 @@
+<html>
+
+<head>
+	<title>Neuron.io</title>
+	<!-- Load mxGraph -->
+	<script type="text/javascript">mxBasePath = '/static';</script>
+	<script type="text/javascript" src="/static/js/mxClient.js"></script>
+
+	<!-- Load our javasripts -->
+	<script type="text/javascript" src="/static/js/utils.js"></script>
+	<script type="text/javascript" src="/static/js/script.js"></script>
+	<script>onLoadHTMLHead()</script>
+
+	<!-- Load css -->
+	<link href="/static/css/style.css" rel="stylesheet" type="text/css" />
+</head>
+
+
+<body onload="onHTMLBodyLoaded()">
+	<div id="toolbar-container" class="horizontal-layout center-children">
+		<button id="export-btn" class="button-default" onclick="exportGraph('model.txt')">Export</button>
+		<button id="group-btn" class="button-default" onclick="groupSelectionCells()">Group</button>
+	</div>
+	<div id="interactive-container" class="horizontal-layout">
+		<div id="node-container"></div>
+		<div id="graph-container"></div>
+		<div id="edit-container"></div>
+	</div>
+</body>
+
+</html>

@@ -1,0 +1,87 @@
+#toolbar-container {
+    width: 100%;
+    height: 9%;
+    margin-bottom: 0.5%;
+    background-color: #f1f3f4;
+    border-style: dashed;
+    border-width: 1px;
+    border-color: lightgray;
+}
+
+#interactive-container {
+    width: 100%;
+    height: 88%;
+}
+
+#node-container {
+    width: 16%;
+    height: 100%;
+    background-color: #f1f3f4;
+    border-style: dashed;
+    border-width: 1px;
+    border-color: lightgray;
+    display: grid;
+    grid-template-rows: repeat(auto-fill, 16%);
+    grid-template-columns: auto auto;
+    overflow-y: scroll;
+}
+
+.node-item {
+    width: 100%;
+    height: 100%;
+}
+
+.node-item:hover {
+    background-color: lightgray;
+}
+
+#graph-container {
+    position: relative;
+    overflow: hidden;
+    width: 68%;
+    height: 100%;
+    cursor: default;
+    background: url('/static/images/grid.gif');
+}
+
+#edit-container {
+    width: 16%;
+    height: 100%;
+    background-color: #f1f3f4;
+    border-style: dashed;
+    border-width: 1px;
+    border-color: lightgray;
+    overflow-y: scroll;
+    display: grid;
+    align-items: center;
+    grid-template-rows: repeat(auto-fill, 25px);
+    grid-template-columns: max-content max-content;
+    grid-gap: 5px;
+}
+
+#edit-container label {
+    text-align: right;
+}
+
+#edit-container label:after {
+    content: ":";
+}
+
+.center-children {
+    justify-content: center;
+}
+
+.horizontal-layout {
+    display: flex;
+    align-items: center;
+}
+
+.button-default {
+    padding: 0.5% 2%;
+    margin: 1%;
+}
+
+svg text {
+    text-anchor: middle;
+    dominant-baseline: middle;
+}
