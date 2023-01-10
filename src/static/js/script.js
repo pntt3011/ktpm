@@ -174,7 +174,7 @@ function createGraphObject(container) {
 
     graph.setAllowDanglingEdges(false);
     graph.setConnectable(true);
-    graph.setCellsEditable(false);
+    // graph.setCellsEditable(false);
 
     graph.getStylesheet().getDefaultEdgeStyle()['edgeStyle'] = 'orthogonalEdgeStyle';
 
