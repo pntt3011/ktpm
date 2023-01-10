@@ -35,8 +35,8 @@ def Node(name: str, short_name: str = None, params: dict = {}, shape: str = None
 
 
 nodes = {
-    "input": Node("Input", shape = "circle"),
-    "output": Node("Output", shape = "circle"),
+    "input_node": Node("Input", shape = "circle"),
+    "output_node": Node("Output", shape = "circle"),
     "conv2d": Node(
         "Convolution", 
         "Conv",

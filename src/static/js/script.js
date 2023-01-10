@@ -427,7 +427,14 @@ function groupSelectionCells() {
             graph.updateCellSize(cell, true);
 
             compositeChildrenCells[cell.id] = cells;
-            cell.setAttribute("children", cells.map(x => x.id));
+
+            const children = [];
+            for (let i = 0; i < cells.length; ++i) {
+                if (cells[i].vertex) {
+                    children.push(cells[i].id);
+                }
+            }
+            cell.setAttribute("children", children);
         }
         finally {
             graph.getModel().endUpdate();
@@ -471,17 +478,17 @@ function simulateResnet() {
 
     graph.getModel().beginUpdate();
     try {
-        const input = addNewVertex("input");
+        const input = addNewVertex("input_node");
 
         // Composite
-        const _input = addNewVertex("input");
+        const _input = addNewVertex("input_node");
         const _conv1 = addNewVertex("conv2d");
         const _bn1 = addNewVertex("batchnorm2d");
         const _relu1 = addNewVertex("relu");
         const _conv2 = addNewVertex("conv2d");
         const _bn2 = addNewVertex("batchnorm2d");
         const _plus = addNewVertex("elewise_plus");
-        const _output = addNewVertex("output");
+        const _output = addNewVertex("output_node");
 
         const _e0 = graph.insertEdge(parent, null, '', _input, _conv1);
         const _e1 = graph.insertEdge(parent, null, '', _conv1, _bn1);
@@ -505,7 +512,7 @@ function simulateResnet() {
         const flatten = addNewVertex("flatten");
         const fc = addNewVertex("fc");
         const sigmoid = addNewVertex("sigmoid");
-        const output = addNewVertex("output");
+        const output = addNewVertex("output_node");
 
         const e0 = graph.insertEdge(parent, null, '', input, composite);
         const e1 = graph.insertEdge(parent, null, '', composite, avgPooling);

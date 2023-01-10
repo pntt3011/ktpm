@@ -7,6 +7,7 @@ from fastapi.staticfiles import StaticFiles
 
 from config import settings
 from nodes import nodes
+from json2torch.node_manager import NodeManager
 
 FILE = Path(__file__).resolve()
 ROOT = FILE.parent
@@ -30,7 +31,8 @@ async def get_nodes():
 
 @app.post("/export", response_class=JSONResponse)
 async def export_graph(nodes: list):
-    code = str(nodes)  # TODO: Nguyen
+    nm = NodeManager(json_data=nodes, name='ResNet', key_field='id')
+    code = nm.export_code()
     return JSONResponse({"result": code}, status_code=200)
 
 
