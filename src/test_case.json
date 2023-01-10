@@ -1,0 +1,199 @@
+[
+    {
+        "id": "12",
+        "label": "flatten",
+        "params": {
+            "start_dim": 1
+        },
+        "inputs": {
+            "11": "x"
+        },
+        "outputs": {
+            "13": "x"
+        }
+    },
+    {
+        "id": "13",
+        "label": "fc",
+        "params": {
+            "in_dim": 100,
+            "out_dim": 1000
+        },
+        "inputs": {
+            "12": "x"
+        },
+        "outputs": {
+            "14": "x"
+        }
+    },
+    {
+        "id": "1",
+        "label": "input_node",
+        "params": {},
+        "inputs": {},
+        "outputs": {
+            "10": "x"
+        }
+    },
+    {
+        "id": "7",
+        "label": "batchnorm2d",
+        "params": {
+            "channel": 64
+        },
+        "inputs": {
+            "6": "x"
+        },
+        "outputs": {
+            "8": "x"
+        }
+    },
+    {
+        "id": "8",
+        "label": "elewise_plus",
+        "params": {},
+        "inputs": {
+            "7": "x",
+            "2": "identity"
+        },
+        "outputs": {
+            "9": "x"
+        }
+    },
+    {
+        "id": "9",
+        "label": "output_node",
+        "params": {},
+        "inputs": {
+            "8": "x"
+        },
+        "outputs": {}
+    },
+    {
+        "id": "10",
+        "label": "composite",
+        "params": {
+            "children": [
+                "2",
+                "3",
+                "4",
+                "5",
+                "6",
+                "7",
+                "8",
+                "9"
+            ]
+        },
+        "inputs": {
+            "1": "x"
+        },
+        "outputs": {
+            "11": "x"
+        }
+    },
+    {
+        "id": "11",
+        "label": "avgpool2d",
+        "params": {
+            "output_size": [
+                1,
+                1
+            ]
+        },
+        "inputs": {
+            "10": "x"
+        },
+        "outputs": {
+            "12": "x"
+        }
+    },
+    {
+        "id": "14",
+        "label": "sigmoid",
+        "params": {},
+        "inputs": {
+            "13": "x"
+        },
+        "outputs": {
+            "15": "x"
+        }
+    },
+    {
+        "id": "15",
+        "label": "output_node",
+        "params": {},
+        "inputs": {
+            "14": "x"
+        },
+        "outputs": {}
+    },
+    {
+        "id": "2",
+        "label": "input_node",
+        "params": {},
+        "inputs": {},
+        "outputs": {
+            "3": "x",
+            "8": "identity"
+        }
+    },
+    {
+        "id": "3",
+        "label": "conv2d",
+        "params": {
+            "in_channel": 3,
+            "out_channel": 64,
+            "kernel_size": 1,
+            "stride": 1,
+            "bias": false
+        },
+        "inputs": {
+            "2": "x"
+        },
+        "outputs": {
+            "4": "x"
+        }
+    },
+    {
+        "id": "4",
+        "label": "batchnorm2d",
+        "params": {
+            "channel": 64
+        },
+        "inputs": {
+            "3": "x"
+        },
+        "outputs": {
+            "5": "x"
+        }
+    },
+    {
+        "id": "5",
+        "label": "relu",
+        "params": {},
+        "inputs": {
+            "4": "x"
+        },
+        "outputs": {
+            "6": "x"
+        }
+    },
+    {
+        "id": "6",
+        "label": "conv2d",
+        "params": {
+            "in_channel": 64,
+            "out_channel": 64,
+            "kernel_size": 7,
+            "stride": 2,
+            "padding": 3,
+            "bias": false
+        },
+        "inputs": {
+            "5": "x"
+        },
+        "outputs": {
+            "7": "x"
+        }
+    }
+]
