@@ -2,7 +2,7 @@ import info.inout_info as inout_info
 import info.torch_function_info as torch_function_info
 import info.torch_layer_info as torch_layer_info
 
-torch_info_mapping = {
+code_info_mapping = {
     # Input/Output
     'input_node': inout_info.InputInfo,
     'output_node': inout_info.OutputInfo,
@@ -20,5 +20,5 @@ torch_info_mapping = {
     'flatten': torch_function_info.FlattenFunctionInfo,
 }
 
-def get_torch_info(label: str):
-    return torch_info_mapping[label]
+def get_code_info(label: str):
+    return code_info_mapping[label]

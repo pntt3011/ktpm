@@ -1,5 +1,5 @@
 from json_node.json_node import JsonNode
-from info.code_info_factory import get_torch_info
+from info.code_info_factory import get_code_info
 
 
 class SingleNode(JsonNode):
@@ -11,5 +11,5 @@ class SingleNode(JsonNode):
         self.outputs = outputs
 
     def generate_code(self):
-        code_generator = get_torch_info(self.label)
+        code_generator = get_code_info(self.label)
         return code_generator.generate_code(self)
