@@ -119,6 +119,7 @@ function getCellAttribute(cell, attr, nodesMetadata) {
     return "";
 }
 
+
 // TODO: Huy
 /**
  * @param {mxGraph} graph 
@@ -127,5 +128,107 @@ function getCellAttribute(cell, attr, nodesMetadata) {
  * @returns {List.<Map<String, Object>>} List of nodes
  */
 function graphToNodes(graph, compositeChildrenCells, nodesMetadata) {
-    return ["hello", "world"];
+    const cells = Object.values(graph.model.cells);
+    let graphNodes = compositeToNodes(cells, nodesMetadata);
+
+    for (composite in compositeChildrenCells) {
+        graphNodes = graphNodes.concat(compositeToNodes(compositeChildrenCells[composite], nodesMetadata))
+    }
+
+    return graphNodes;
+}
+
+
+function compositeToNodes(cells, nodesMetadata) {
+    const results = [];
+
+    for (let i = 0; i < cells.length; i++) {
+        if (cells[i].vertex) {
+            results.push(
+                {
+                    "id": cells[i].id,
+                    "label": cells[i].getAttribute('type', ""),
+                    "params": parseNodeParams(cells[i], nodesMetadata),
+                    "inputs": {},
+                    "outputs": {}
+                }
+            )
+        }
+    }
+
+    parseInputOutput(results, cells);
+
+    return results;
+}
+
+
+function parseNodeParams(cell, nodesMetadata) {
+    const results = {};
+    const type = cell.getAttribute('type', "");
+
+    for (param in nodesMetadata[type]["params"]) {
+        results[param] = getCellAttribute(cell, param, nodesMetadata);
+    }
+
+    return results;
+}
+
+function parseInputOutput(results, cells) {
+    for (let i = 0; i < results.length; ++i) {
+        const result = results[i];
+        const cell = findCellById(result["id"], cells);
+        if (cell == null) {
+            continue;
+        }
+
+        const cellInputs = getInputsOfCell(cell, cells)
+        const input = result["inputs"]
+        for (let i = 0; i < cellInputs.length; ++i) {
+            input[cellInputs[i].id] = "x" + i;
+        }
+
+        const cellOutputs = getOutputsOfCell(cell, cells)
+        const output = result["outputs"]
+        for (let i = 0; i < cellOutputs.length; ++i) {
+            output[cellOutputs[i].id] = "x" + i;
+        }
+    }
+
+    return results;
+}
+
+
+function findCellById(id, cells) {
+    for (let i = 0; i < cells.length; ++i) {
+        if (cells[i].id === id && cells[i].vertex) {
+            return cells[i];
+        }
+    }
+    return null;
+}
+
+
+function getInputsOfCell(cell, cells) {
+    const results = [];
+
+    for (let i = 0; i < cells.length; ++i) {
+        if (cells[i].edge && cells[i].target.id == cell.id) {
+            results.push(cells[i].source);
+        }
+    }
+
+    return results;
+}
+
+
+function getOutputsOfCell(cell, cells) {
+    const results = [];
+
+    for (let i = 0; i < cells.length; ++i) {
+        if (cells[i].edge && cells[i].source.id == cell.id) {
+            results.push(cells[i].target);
+        }
+    }
+
+    return results;
 }
